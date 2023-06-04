@@ -4,9 +4,16 @@ import axios from 'axios';
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate username and password
+    if (!username || !password) {
+      setError('Please enter a valid username and password.');
+      return;
+    }
 
     try {
       const response = await axios.post('http://localhost:3000/register', {
@@ -42,6 +49,7 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button type="submit" className='rounded bg-red-200 m-2 p-2'>Register</button>
+          {error && <p className='text-red-500'>{error}</p>}
         </form>
       </div>
     </div>

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -31,6 +31,7 @@ function Login() {
     } catch (error) {
       // Handle login error
       console.error(error);
+      setError('Invalid username or password. Please try again.');
     }
   };
 
@@ -54,6 +55,7 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button type="submit" className='rounded bg-red-200 m-2 p-2'>Login</button>
+          {error && <p className='text-red-500'>{error}</p>}
         </form>
       </div>
     </div>
