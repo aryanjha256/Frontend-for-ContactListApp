@@ -6,6 +6,7 @@ function Contacts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
 
   useEffect(() => {
@@ -20,7 +21,7 @@ function Contacts() {
           },
         };
 
-        const response = await axios.get('http://localhost:3000/contacts', config);
+        const response = await axios.get('https://backend-for-contactlistapp-production.up.railway.app/contacts', config);
 
         // Update contacts state with the data received
         setContacts(response.data);
@@ -50,7 +51,7 @@ function Contacts() {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.post('http://localhost:3000/contacts', { name, email }, config);
+      const response = await axios.post('https://backend-for-contactlistapp-production.up.railway.app/contacts', { name, email }, config);
       setContacts([...contacts, response.data]);
       setName('');
       setEmail('');
@@ -72,26 +73,34 @@ function Contacts() {
       <div className='p-8 bg-gray-300 m-4 max-w-md'>
         <h2 className='text-3xl bold font-bold text-center'>Contacts</h2>
         <div>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-        />
-        <input
-          type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <button onClick={handleAddContact}>Add Contact</button>
-      </div>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+          />
+          <input
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
+          <button onClick={handleAddContact}>Add Contact</button>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+
+        </div>
         <ul>
           {contacts.map((contact) => (
             <li key={contact._id}>
               <p className='bg-gray-200 p-2 m-2'>Name: {contact.name}</p>
               <p className='bg-gray-200 p-2 m-2'>Email: {contact.email}</p>
               <p className='bg-gray-200 p-2 m-2'>Phone: {contact.phone}</p>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="black" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+
             </li>
           ))}
         </ul>

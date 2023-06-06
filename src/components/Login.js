@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -12,7 +13,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3000/login', {
+      const response = await axios.post('https://backend-for-contactlistapp-production.up.railway.app/login', {
         username,
         password,
       }, {
@@ -56,6 +57,7 @@ function Login() {
           />
           <button type="submit" className='rounded bg-red-200 m-2 p-2'>Login</button>
           {error && <p className='text-red-500'>{error}</p>}
+          <Link to='/register' className='text-center text-blue-500'>Don't have an account? Register here.</Link>
         </form>
       </div>
     </div>

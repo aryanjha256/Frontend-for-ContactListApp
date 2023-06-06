@@ -1,31 +1,32 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate username and password
-    if (!username || !password) {
-      setError('Please enter a valid username and password.');
-      return;
-    }
 
     try {
-      const response = await axios.post('http://localhost:3000/register', {
+      const response = await axios.post('https://backend-for-contactlistapp-production.up.railway.app/register', {
         username,
         password,
       });
 
       // Handle successful registration
       console.log(response.data);
+      setSuccess('Registration successful. Please login.');
+      setError('');
     } catch (error) {
       // Handle registration error
       console.error(error);
+      setSuccess('');
+      setError('Error registering. Please try again.');
     }
   };
 
@@ -50,6 +51,8 @@ function Register() {
           />
           <button type="submit" className='rounded bg-red-200 m-2 p-2'>Register</button>
           {error && <p className='text-red-500'>{error}</p>}
+          {success && <p className='text-green-500'>{success}</p>}
+          <Link to='/login' className='text-center text-blue-500'>Already have an account? Login here.</Link>
         </form>
       </div>
     </div>
