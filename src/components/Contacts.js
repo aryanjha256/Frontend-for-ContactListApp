@@ -51,21 +51,57 @@ function Contacts() {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.post('https://backend-for-contactlistapp-production.up.railway.app/contacts', { name, email }, config);
+      const response = await axios.post('https://backend-for-contactlistapp-production.up.railway.app/contacts', { name, email, phone }, config);
       setContacts([...contacts, response.data]);
       setName('');
       setEmail('');
+      setPhone('');
     } catch (error) {
       console.error('Error adding contact:', error);
     }
   };
 
+  const handleDeleteContact = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      await axios.delete(`https://backend-for-contactlistapp-production.up.railway.app/contacts/${id}`, config);
+      setContacts(contacts.filter((contact) => contact._id !== id));
+    } catch (error) {
+      console.error('Error deleting contact:', error);
+    }
+  };
+
+  const handleUpdateContact = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.put(`https://backend-for-contactlistapp-production.up.railway.app/contacts/${id}`, { name, email, phone }, config);
+      setContacts(contacts.map((contact) => (contact._id === id ? response.data : contact)));
+      setName('');
+      setEmail('');
+      setPhone('');
+    } catch (error) {
+      console.error('Error updating contact:', error);
+    }
+  };
+
+
+
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='text-3xl font-semibold text-center'>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className='text-3xl font-semibold text-center'>{error}</div>;
   }
 
   return (
@@ -75,20 +111,27 @@ function Contacts() {
         <div>
           <input
             type="text"
+            className='bg-gray-200 p-2 m-2'
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Name"
           />
+          <input type="tel"
+            className='bg-gray-200 p-2 m-2'
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder='Phone'
+          />
           <input
-            type="text"
+            type="email"
+            className='bg-gray-200 p-2 m-2'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
           />
-          <button onClick={handleAddContact}>Add Contact</button>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          <button onClick={handleAddContact} type='submit'>
+            Add Contact
+          </button>
 
         </div>
         <ul>
@@ -97,10 +140,8 @@ function Contacts() {
               <p className='bg-gray-200 p-2 m-2'>Name: {contact.name}</p>
               <p className='bg-gray-200 p-2 m-2'>Email: {contact.email}</p>
               <p className='bg-gray-200 p-2 m-2'>Phone: {contact.phone}</p>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="black" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-
+              <button className='bg-yellow-200 p-2 m-2' onClick={() => handleUpdateContact(contact._id)}>Edit</button>
+              <button className='bg-red-600 p-2 m-2' onClick={() => handleDeleteContact(contact._id)}>Delete</button>
             </li>
           ))}
         </ul>
